@@ -1,24 +1,37 @@
 import UIKit
-final class MovieQuizViewController: UIViewController {
+final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate  {
     
     @IBOutlet private var counterLabel: UILabel!
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var textLabel: UILabel!
-    
     private var currentQuestionIndex: Int = 0
     private let questionsAmount: Int = 10
-    private let questionFactory: QuestionFactory = QuestionFactory()
+    private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
-    //private lazy var currentQuestion = questions[currentQuestionIndex]
     private var correctAnswer: Int = 0
+    private var correctAnswers: Int = 0
     private var allowAnswer: Bool = true
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        show(quiz: convert(model: currentQuestion))
-        
+        imageView.layer.cornerRadius = 20
+        questionFactory = QuestionFactory(delegate: self)
+        questionFactory?.requestNextQuestion()
     }
-    
+    // MARK: - QuestionFactoryDelegate
+
+    func didReceiveNextQuestion(question: QuizQuestion?) {
+        guard let question = question else {
+            return
+        }
+        
+        currentQuestion = question
+        let viewModel = convert(model: question)
+        DispatchQueue.main.async { [weak self] in
+            self?.show(quiz: viewModel)
+        }
+    }
     private func show(quiz step: QuizStepViewModel) {
         counterLabel.text = step.questionNumber
         imageView.image = step.image
@@ -50,7 +63,12 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func showNextQuestionOrResults() {
-      if currentQuestionIndex == questions.count - 1 {
+        
+        if currentQuestionIndex == questionsAmount - 1 {
+            let _ = correctAnswers == questionsAmount ?
+                    "Поздравляем, Вы ответили на 10 из 10!" :
+                    "Вы ответили на \(correctAnswers) из 10, попробуйте ещё раз!"
+        
           let viewModel = QuizResultsViewModel (title: "Этот раунд окончен",text: "Ваш результат: \(correctAnswer) из 10",buttonText: "Сыграть еще раз")
           show(quiz: viewModel)
       } else {
@@ -58,15 +76,7 @@ final class MovieQuizViewController: UIViewController {
           imageView.layer.masksToBounds = true
           imageView.layer.borderWidth = 0
           allowAnswer = true
-          if let nextQuestion = questionFactory.requestNextQuestion() {
-              currentQuestion = nextQuestion
-              let viewModel = convert(model: nextQuestion)
-              
-              show(quiz: viewModel)
-          }
-          let viewModel = convert(model: nextQuestion)
-          show(quiz: viewModel)
-          
+          questionFactory?.requestNextQuestion()
       }
     }
     
@@ -85,12 +95,7 @@ final class MovieQuizViewController: UIViewController {
                 self.imageView.layer.masksToBounds = true
                 self.imageView.layer.borderWidth = 0
                 self.allowAnswer = true
-                if let firstQuestion = self.questionFactory.requestNextQuestion() {
-                    self.currentQuestion = firstQuestion
-                    let viewModel = self.convert(model: firstQuestion)
-                    
-                    self.show(quiz: viewModel)
-                }
+                self.questionFactory?.requestNextQuestion()
             }
         alert.addAction(action)
         self.present(alert,animated: true, completion: nil)
