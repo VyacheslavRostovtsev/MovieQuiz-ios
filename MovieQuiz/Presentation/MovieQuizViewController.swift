@@ -1,31 +1,34 @@
 import UIKit
-final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate  {
+final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, AlertDelegate  {
     
-    @IBOutlet private var counterLabel: UILabel!
-    @IBOutlet private var imageView: UIImageView!
-    @IBOutlet private var textLabel: UILabel!
+    @IBOutlet private weak var counterLabel: UILabel!
+    @IBOutlet private weak var imageView: UIImageView!
+    @IBOutlet private weak var textLabel: UILabel!
+    @IBOutlet private weak var noButton: UIButton!//
+    @IBOutlet private weak var yesButton: UIButton!//
+    
     private var currentQuestionIndex: Int = 0
     private let questionsAmount: Int = 10
-    private var questionFactory: QuestionFactoryProtocol?
+    private var questionFactory: QuestionFactory?
     private var currentQuestion: QuizQuestion?
-    private var correctAnswer: Int = 0
     private var correctAnswers: Int = 0
     private var allowAnswer: Bool = true
-    
+    private var alertPresenter: AlertPresenterProtocol?
+    private var statisticService: StatisticService?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.layer.cornerRadius = 20
         questionFactory = QuestionFactory(delegate: self)
+        alertPresenter = AlertPresenter(delegate: self)
         questionFactory?.requestNextQuestion()
+        statisticService = StatisticServiceImplementation()
     }
-    // MARK: - QuestionFactoryDelegate
 
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question = question else {
             return
         }
-        
         currentQuestion = question
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
@@ -39,7 +42,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate  
     }
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        QuizStepViewModel(
+        return QuizStepViewModel(
                     image: UIImage(named: model.image) ?? UIImage(),
                     question: model.text,
                     questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
@@ -52,34 +55,45 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate  
                        
         if isCorrect == true {
             imageView.layer.borderColor = UIColor(named: "green")?.cgColor
-            correctAnswer += 1
+            correctAnswers += 1
         } else {
             imageView.layer.borderColor = UIColor(named: "red")?.cgColor
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {[weak self] in
             guard let self = self else {return}
             self.showNextQuestionOrResults()
+            self.imageView.layer.borderWidth = 0
         }
     }
     
     private func showNextQuestionOrResults() {
         
         if currentQuestionIndex == questionsAmount - 1 {
-            let _ = correctAnswers == questionsAmount ?
-                    "Поздравляем, Вы ответили на 10 из 10!" :
-                    "Вы ответили на \(correctAnswers) из 10, попробуйте ещё раз!"
-        
-          let viewModel = QuizResultsViewModel (title: "Этот раунд окончен",text: "Ваш результат: \(correctAnswer) из 10",buttonText: "Сыграть еще раз")
-          show(quiz: viewModel)
-      } else {
-          currentQuestionIndex += 1
-          imageView.layer.masksToBounds = true
-          imageView.layer.borderWidth = 0
-          allowAnswer = true
-          questionFactory?.requestNextQuestion()
+            statisticService?.store(correct: correctAnswers, total: questionsAmount)
+            guard let gamesCount = statisticService?.gamesCount else {return}
+            guard let bestGame = statisticService?.bestGame else {return}
+            guard let totalAccuracy = statisticService?.totalAccuracy else {return}
+            let finalScreen = AlertModel (title: "Этот раунд окончен!",
+                                          message: """
+Ваш результат: \(correctAnswers)/\(questionsAmount)
+Количество сыгранных квизов: \(gamesCount)
+Рекорд: \(bestGame.correct)/\(bestGame.total) (\(bestGame.date.dateTimeString))
+Cредняя точность: \(String(format: "%.2f", totalAccuracy))%
+""" ,
+            buttonText: "Сыграть еще раз",
+            completion: {[weak self] in
+            guard let self = self else { return }
+                self.imageView.layer.borderWidth = 0
+                self.currentQuestionIndex = 0
+                self.correctAnswers = 0
+                self.questionFactory?.requestNextQuestion()
+            })
+            alertPresenter?.showAlert(model: finalScreen)
+        } else {
+            currentQuestionIndex += 1
+            questionFactory?.requestNextQuestion()
       }
     }
-    
     private func show(quiz result: QuizResultsViewModel) {
         let alert = UIAlertController(
             title: result.title,
@@ -91,7 +105,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate  
             style: .default) {[weak self]_ in
                 guard let self = self else {return}
                 self.currentQuestionIndex = 0
-                self.correctAnswer = 0
+                self.correctAnswers = 0
                 self.imageView.layer.masksToBounds = true
                 self.imageView.layer.borderWidth = 0
                 self.allowAnswer = true
@@ -102,28 +116,28 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate  
     }
     
     @IBAction private func noButtonClicked(_ sender: UIButton) {
-        if allowAnswer == true {
+        
             guard let currentQuestion = currentQuestion else {
                 return
             }
             let givenAnswer = false
             showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-            allowAnswer = false
-        }
+//            blockedButton()
+        
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        if allowAnswer == true {
+       
             guard let currentQuestion = currentQuestion else {
                 return
             }
             let givenAnswer = true
             showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-            allowAnswer = false
+          
         }
     }
     
-}
+
 
 
 
