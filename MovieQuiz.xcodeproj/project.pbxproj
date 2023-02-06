@@ -27,6 +27,7 @@
 		EECED825295FA1530090CC27 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1ABAB12831907B00B3E448 /* AppDelegate.swift */; };
 		EEDD95EA299154D8004ACE2F /* AlertModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD95E9299154D8004ACE2F /* AlertModel.swift */; };
 		EEDD95EC29915527004ACE2F /* GameRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD95EB29915527004ACE2F /* GameRecord.swift */; };
+		EEDD95EE29915567004ACE2F /* AlertPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD95ED29915567004ACE2F /* AlertPresenterProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,7 @@
 		EECED81D295EE0420090CC27 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = "../../../../Desktop/Swift/MovieQuiz-iOS MAX/MovieQuiz/Resources/Info.plist"; sourceTree = "<group>"; };
 		EEDD95E9299154D8004ACE2F /* AlertModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertModel.swift; sourceTree = "<group>"; };
 		EEDD95EB29915527004ACE2F /* GameRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameRecord.swift; sourceTree = "<group>"; };
+		EEDD95ED29915567004ACE2F /* AlertPresenterProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertPresenterProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +143,7 @@
 				EE6CB8DE2971752F00DB52CE /* QuestionFactoryDelegate.swift */,
 				EE7AF0B7296C5BC700E873B5 /* QuestionFactory.swift */,
 				EE0453BE296DB7B6005E9B65 /* QuestionFactoryProtocol.swift */,
+				EEDD95ED29915567004ACE2F /* AlertPresenterProtocol.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -262,6 +265,7 @@
 				EE7AF0BB296C674700E873B5 /* QuizStepViewModel.swift in Sources */,
 				EE7AF0BF296C67BC00E873B5 /* QuizQuestion.swift in Sources */,
 				EE7AF0B8296C5BC700E873B5 /* QuestionFactory.swift in Sources */,
+				EEDD95EE29915567004ACE2F /* AlertPresenterProtocol.swift in Sources */,
 				AD1ABAB62831907B00B3E448 /* MovieQuizViewController.swift in Sources */,
 				EEDD95EC29915527004ACE2F /* GameRecord.swift in Sources */,
 				AD77F5742857F8810062FB14 /* Date+Extensions.swift in Sources */,
