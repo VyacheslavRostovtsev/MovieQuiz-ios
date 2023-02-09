@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		AD1ABAB42831907B00B3E448 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1ABAB32831907B00B3E448 /* SceneDelegate.swift */; };
-		AD1ABAB62831907B00B3E448 /* MovieQuizViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1ABAB52831907B00B3E448 /* MovieQuizViewController.swift */; };
 		AD1ABAB92831907B00B3E448 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD1ABAB72831907B00B3E448 /* Main.storyboard */; };
 		AD1ABABB2831907F00B3E448 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD1ABABA2831907F00B3E448 /* Assets.xcassets */; };
 		AD1ABABE2831907F00B3E448 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD1ABABC2831907F00B3E448 /* LaunchScreen.storyboard */; };
@@ -30,6 +29,7 @@
 		EEE7DDB42991471B0089D331 /* AlertPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE7DDB32991471B0089D331 /* AlertPresenterProtocol.swift */; };
 		EEE7DDB6299147560089D331 /* AlertDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE7DDB5299147560089D331 /* AlertDelegate.swift */; };
 		EEE7DDB82991475D0089D331 /* StatisticService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE7DDB72991475D0089D331 /* StatisticService.swift */; };
+		EEFB1CDF2994EE1600923AE2 /* MovieQuizViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1ABAB52831907B00B3E448 /* MovieQuizViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -267,8 +267,8 @@
 				EEE7DDB42991471B0089D331 /* AlertPresenterProtocol.swift in Sources */,
 				EE7AF0B8296C5BC700E873B5 /* QuestionFactory.swift in Sources */,
 				EEE7DDB22991469A0089D331 /* GameRecord.swift in Sources */,
-				AD1ABAB62831907B00B3E448 /* MovieQuizViewController.swift in Sources */,
 				AD77F5742857F8810062FB14 /* Date+Extensions.swift in Sources */,
+				EEFB1CDF2994EE1600923AE2 /* MovieQuizViewController.swift in Sources */,
 				EE7AF0BD296C679D00E873B5 /* QuizResultsViewModel.swift in Sources */,
 				EEE7DDB82991475D0089D331 /* StatisticService.swift in Sources */,
 				AD1ABAB42831907B00B3E448 /* SceneDelegate.swift in Sources */,
