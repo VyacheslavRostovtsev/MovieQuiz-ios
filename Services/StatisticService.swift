@@ -36,6 +36,7 @@ final class StatisticServiceImplementation: StatisticService {
     }
 
 private var date = Date()
+   
 
 func store(correct count: Int, total amount: Int) {
     gamesCount += 1
